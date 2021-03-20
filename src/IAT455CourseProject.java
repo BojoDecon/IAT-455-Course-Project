@@ -29,6 +29,7 @@ public class IAT455CourseProject extends JFrame {
         // local hard disk.
         try {
         	placeholderImage = ImageIO.read(new File("placeholderImg.jpg"));
+        	select = ImageIO.read(new File("placeholderImg.jpg"));
         } catch (Exception e) {
             System.out.println("Cannot load the provided image");
         }
@@ -39,23 +40,21 @@ public class IAT455CourseProject extends JFrame {
         height = placeholderImage.getHeight();
         
 		this.addWindowListener(
-				new WindowAdapter(){//anonymous class definition
-					public void windowClosing(WindowEvent e){
-						System.exit(0);//terminate the program
-					}//end windowClosing()
-				}//end WindowAdapter
-				);//end addWindowListener
-		button1 = new JButton("Browse");
+			new WindowAdapter(){//anonymous class definition
+				public void windowClosing(WindowEvent e){
+					System.exit(0);//terminate the program
+				}//end windowClosing()
+			}//end WindowAdapter
+		);//end addWindowListener
+		
+		button1 = new JButton();
 	    button1.setBounds(10, 10, width/2, height/2);
-	    
-	    add(button1);
         
+	    add(button1);
+	    
         setLayout(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); 
-        button1.setOpaque(false);
-        button1.setContentAreaFilled(false);
-        button1.setBorderPainted(false);
         
         button1.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
@@ -93,18 +92,18 @@ public class IAT455CourseProject extends JFrame {
         return result;
     }
 	
-	@Override
-	public void paint(Graphics g){
-		super.paint(g);
+	public void paint(Graphics g) {
 		int w = width / 2;
         int h = height / 2;
 		
 		this.setSize(w * 7 + 300, h * 5 + 220);
+		
+		g.drawImage(select, 18, 41, w, h, this);
 		repaint();
 	}
 	
 	public static void main(String[] args) {
-		new IAT455CourseProject();//instantiate this object
+		new IAT455CourseProject();
 	}
 
 }
