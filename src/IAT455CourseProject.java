@@ -1,4 +1,5 @@
 import java.awt.Color;
+import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
@@ -54,11 +55,38 @@ public class IAT455CourseProject extends JFrame {
 		button1 = new JButton();
 	    button1.setBounds(10, 30, width/2, height/2);
 	    
-	    brushWidth = new JSlider(1, 20, 5);
-	    brushWidth.setBounds(100, 100, width/2, height/2);
+	    JSlider slider=new JSlider();
+
+	  //spacing between major tick
+	  slider.setMajorTickSpacing(10);
+
+	  //spacing between minor tick
+	  slider.setMinorTickSpacing(1);
+
+	  //make slider integer value visible
+	  slider.setPaintLabels(true);
+
+	  //make slider tick visible
+	  slider.setPaintTicks(true);
+
+	  //Create a JFrame with title ( Put slider into JFrame )
+	  JFrame frame=new JFrame("Slider frame");
+	  
+	  //set layout manager for JFrame
+	  frame.setLayout(new FlowLayout());
+
+	  //Add JSlider into JFrame
+	  frame.add(slider);	
+	//Set default close operation for JFrame
+	  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+
+	  //Set JFrame size
+	  frame.setSize(400,100);
+
+	  //Make JFrame visible. So we can see it.
+	  frame.setVisible(true);
         
 	    add(button1);
-	    add(brushWidth);
         setLayout(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); 
@@ -81,12 +109,6 @@ public class IAT455CourseProject extends JFrame {
         		    }
         		}
         	}
-        });
-        brushWidth.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                width = brushWidth.getValue();
-                height = brushWidth.getValue();
-            }
         });
 	}// end constructor
 	
