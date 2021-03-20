@@ -110,6 +110,13 @@ public class IAT455CourseProject extends JFrame {
         		}
         	}
         });
+        
+        brushWidth.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                width = brushWidth.getValue();
+                height = brushWidth.getValue();
+            }
+        });
 	}// end constructor
 	
 	public BufferedImage combineImages(BufferedImage src1, BufferedImage src2) {
