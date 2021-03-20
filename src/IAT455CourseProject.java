@@ -5,8 +5,14 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
 
+import javax.swing.JButton;
+
 public class IAT455CourseProject extends Frame {
 
+	static int width; // width of the image
+	int height; // height of the image
+	public static JButton button1;
+	
 	public IAT455CourseProject() {
 		
 		this.addWindowListener(
@@ -16,6 +22,8 @@ public class IAT455CourseProject extends Frame {
 					}//end windowClosing()
 				}//end WindowAdapter
 				);//end addWindowListener
+		button1 = new JButton("Browse");
+	    button1.setBounds(17, 560, width/2, height/2);
 	}// end constructor
 	public BufferedImage combineImages(BufferedImage src1, BufferedImage src2)
     {
