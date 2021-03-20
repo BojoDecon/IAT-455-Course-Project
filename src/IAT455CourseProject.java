@@ -1,4 +1,5 @@
 import java.awt.Frame;
+import java.awt.Graphics;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
@@ -15,9 +16,13 @@ public class IAT455CourseProject extends Frame {
 				);//end addWindowListener
 	}// end constructor
 	
+	public void paint(Graphics g){
+		
+	}
+	
 	public static void main(String[] args) {
-		// TODO Auto-generated method stub
-
+		IAT455CourseProject img = new IAT455CourseProject();//instantiate this object
+	    img.repaint();//render the image
 	}
 
 }
