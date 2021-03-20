@@ -48,7 +48,7 @@ public class IAT455CourseProject extends JFrame {
 		);//end addWindowListener
 		
 		button1 = new JButton();
-	    button1.setBounds(10, 10, width/2, height/2);
+	    button1.setBounds(10, 30, width/2, height/2);
         
 	    add(button1);
 	    
@@ -96,9 +96,12 @@ public class IAT455CourseProject extends JFrame {
 		int w = width / 2;
         int h = height / 2;
 		
-		this.setSize(w * 7 + 300, h * 5 + 220);
+		this.setSize(w * 7 + 300, h * 5 + 100);
 		
-		g.drawImage(select, 18, 41, w, h, this);
+		g.drawString("Select Image (click on image for browsing UI)", 18, 50);
+		g.drawImage(select, 18, 61, w, h, this);
+		g.drawImage(select, 200, 61, w*5, h*5, this);
+		
 		repaint();
 	}
 	
