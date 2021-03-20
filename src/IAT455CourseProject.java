@@ -13,6 +13,9 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JSlider;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class IAT455CourseProject extends JFrame {
@@ -20,6 +23,7 @@ public class IAT455CourseProject extends JFrame {
 	static int width; // width of the image
 	int height; // height of the image
 	public static JButton button1;
+	private JSlider brushWidth;
 	static BufferedImage select, placeholderImage;
 	
 	public IAT455CourseProject() {
@@ -48,10 +52,18 @@ public class IAT455CourseProject extends JFrame {
 		);//end addWindowListener
 		
 		button1 = new JButton();
+<<<<<<< Updated upstream
 	    button1.setBounds(10, 30, width/2, height/2);
+=======
+	    button1.setBounds(10, 10, width/2, height/2);
+	    
+	    brushWidth = new JSlider(1, 20, 5);
+	    brushWidth.setBounds(100, 100, width/2, height/2);
+	   
+>>>>>>> Stashed changes
         
 	    add(button1);
-	    
+	    add(brushWidth);
         setLayout(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLocationRelativeTo(null); 
@@ -75,6 +87,12 @@ public class IAT455CourseProject extends JFrame {
         		}
         	}
         });
+        brushWidth.addChangeListener(new ChangeListener() {
+            public void stateChanged(ChangeEvent e) {
+                width = brushWidth.getValue();
+                height = brushWidth.getValue();
+            }
+        });
 	}// end constructor
 	
 	public BufferedImage combineImages(BufferedImage src1, BufferedImage src2) {
@@ -96,12 +114,9 @@ public class IAT455CourseProject extends JFrame {
 		int w = width / 2;
         int h = height / 2;
 		
-		this.setSize(w * 7 + 300, h * 5 + 100);
+		this.setSize(w * 7 + 300, h * 5 + 220);
 		
-		g.drawString("Select Image (click on image for browsing UI)", 18, 50);
-		g.drawImage(select, 18, 61, w, h, this);
-		g.drawImage(select, 200, 61, w*5, h*5, this);
-		
+		g.drawImage(select, 18, 41, w, h, this);
 		repaint();
 	}
 	
