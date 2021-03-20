@@ -46,7 +46,7 @@ public class IAT455CourseProject extends JFrame {
 				}//end WindowAdapter
 				);//end addWindowListener
 		button1 = new JButton("Browse");
-	    button1.setBounds(17, 560, width/2, height/2);
+	    button1.setBounds(10, 10, width/2, height/2);
 	    
 	    add(button1);
         
@@ -93,16 +93,18 @@ public class IAT455CourseProject extends JFrame {
         return result;
     }
 	
+	@Override
 	public void paint(Graphics g){
+		super.paint(g);
 		int w = width / 2;
         int h = height / 2;
 		
 		this.setSize(w * 7 + 300, h * 5 + 220);
+		repaint();
 	}
 	
 	public static void main(String[] args) {
-		IAT455CourseProject img = new IAT455CourseProject();//instantiate this object
-	    img.repaint();//render the image
+		new IAT455CourseProject();//instantiate this object
 	}
 
 }
