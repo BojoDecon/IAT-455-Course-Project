@@ -109,7 +109,7 @@ public class IAT455CourseProject extends JFrame {
         this.addMouseListener(mml);
 	}// end constructor
 	
-	public BufferedImage combineImages(BufferedImage src1, BufferedImage src2) {
+	public BufferedImage multiplyImages(BufferedImage src1, BufferedImage src2) {
         BufferedImage result = new BufferedImage(src1.getWidth(),src1.getHeight(),src1.getType());
 
         for(int i=0; i <result.getWidth();i++){
@@ -124,6 +124,7 @@ public class IAT455CourseProject extends JFrame {
                 newR = clip(newR);
                 newG = clip(newG);
                 newB = clip(newB);
+                
                 result.setRGB(i,j, new Color (newR,newG,newB).getRGB());
             }
         }
