@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.MouseInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -22,9 +23,9 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class IAT455CourseProject extends JFrame implements MouseListener {
+public class IAT455CourseProject extends JFrame {
 
-	static int width, height; 
+	static int width, height, mouseX, mouseY; 
 	public static JButton button1;
 	static BufferedImage select, placeholderImage;
 	boolean pressed;
@@ -46,8 +47,6 @@ public class IAT455CourseProject extends JFrame implements MouseListener {
         
         width = placeholderImage.getWidth();
         height = placeholderImage.getHeight();
-        
-        pressed = false;
         
 		this.addWindowListener(
 			new WindowAdapter(){//anonymous class definition
@@ -104,6 +103,10 @@ public class IAT455CourseProject extends JFrame implements MouseListener {
         		}
         	}
         });
+        
+        //create class and listener
+        myMouseListener mml = new myMouseListener();
+        this.addMouseListener(mml);
 	}// end constructor
 	
 	public BufferedImage combineImages(BufferedImage src1, BufferedImage src2) {
@@ -131,7 +134,12 @@ public class IAT455CourseProject extends JFrame implements MouseListener {
 		g.drawString("Select Image (click on small image for browsing UI)", 18, 50);
 		g.drawImage(select, 18, 61, w, h, this);
 		g.drawImage(select, 200, 61, w*5, h*5, this);
-		System.out.println(pressed);
+		if(pressed == true) {
+			g.fillOval((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - diameter/2,
+				(int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - diameter/2,
+				diameter*2, diameter*2);		
+		}
+		System.out.println(diameter);
 		repaint();
 	}
 	
@@ -140,37 +148,31 @@ public class IAT455CourseProject extends JFrame implements MouseListener {
 		img.repaint();
 	}
 
-	@Override
-	public void mouseClicked(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	class myMouseListener implements MouseListener {
 
-	@Override
-	public void mouseEntered(MouseEvent e) {
-		
-	}
+	    @Override
+	    public void mouseClicked(MouseEvent arg0) { 
+	       
+	    }
 
-	@Override
-	public void mouseExited(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
-	}
+	    @Override
+	    public void mouseEntered(MouseEvent arg0) {
+	    	
+	    }
 
-	@Override
-	public void mousePressed(MouseEvent e) {
-		if (e.getX() >= 200 
-				&& e.getX() <= 200 + width/2*5 
-				&& e.getY() >= 61 
-				&& e.getY() <= 61 + height/2*5) {
-			pressed = true;
-		}
-	}
+	    @Override
+	    public void mouseExited(MouseEvent arg0) { 
+	    	
+	    }
 
-	@Override
-	public void mouseReleased(MouseEvent e) {
-		// TODO Auto-generated method stub
-		pressed = false;
-	}
+	    @Override
+	    public void mousePressed(MouseEvent arg0) {
+	    	pressed = true;
+	    }
 
+	    @Override
+	    public void mouseReleased(MouseEvent arg0) { 
+	    	pressed = false;
+	    }
+	}
 }
