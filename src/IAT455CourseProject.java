@@ -150,9 +150,9 @@ public class IAT455CourseProject extends JFrame {
 		
 		if(pressed == true
 				&& (int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() >= 200 + diameter/2
-				&& (int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() <= 200 + w*5 - diameter/2
+				&& (int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() <= 200 + w*5 - diameter*2
 				&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() >= 61 + diameter/2
-				&& (int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() <= 61 + h*5 - diameter/2) {
+				&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() <= 61 + h*5 - diameter*2) {
 			brushTrail.add(new Ellipse2D.Double((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - diameter/2,
 				(int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - diameter/2,
 				diameter*2, diameter*2));	
@@ -161,7 +161,6 @@ public class IAT455CourseProject extends JFrame {
 		for (int a = 0; a < brushTrail.size(); a++) {
 			g2.fill(brushTrail.get(a));
 		}
-		System.out.println("yup");
 		repaint();
 	}
 	private int clip(int v)
