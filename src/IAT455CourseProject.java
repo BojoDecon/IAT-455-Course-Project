@@ -4,6 +4,8 @@ import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.image.BufferedImage;
@@ -19,7 +21,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-public class IAT455CourseProject extends JFrame {
+public class IAT455CourseProject extends JFrame implements MouseListener {
 
 	static int width; // width of the image
 	int height; // height of the image
@@ -57,34 +59,34 @@ public class IAT455CourseProject extends JFrame {
 	    
 	    JSlider slider=new JSlider();
 
-	  //spacing between major tick
-	  slider.setMajorTickSpacing(10);
+		//spacing between major tick
+		slider.setMajorTickSpacing(10);
+	
+		//spacing between minor tick
+		slider.setMinorTickSpacing(1);
 
-	  //spacing between minor tick
-	  slider.setMinorTickSpacing(1);
+		//make slider integer value visible
+		slider.setPaintLabels(true);
+	
+		//make slider tick visible
+		slider.setPaintTicks(true);
+	
+		//Create a JFrame with title ( Put slider into JFrame )
+		JFrame frame=new JFrame("Slider frame");
+		  
+		//set layout manager for JFrame
+		frame.setLayout(new FlowLayout());
+	
+		//Add JSlider into JFrame
+		frame.add(slider);	
+		//Set default close operation for JFrame
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-	  //make slider integer value visible
-	  slider.setPaintLabels(true);
+		//Set JFrame size
+		frame.setSize(400,100);
 
-	  //make slider tick visible
-	  slider.setPaintTicks(true);
-
-	  //Create a JFrame with title ( Put slider into JFrame )
-	  JFrame frame=new JFrame("Slider frame");
-	  
-	  //set layout manager for JFrame
-	  frame.setLayout(new FlowLayout());
-
-	  //Add JSlider into JFrame
-	  frame.add(slider);	
-	//Set default close operation for JFrame
-	  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-	  //Set JFrame size
-	  frame.setSize(400,100);
-
-	  //Make JFrame visible. So we can see it.
-	  frame.setVisible(true);
+		//Make JFrame visible. So we can see it.
+		frame.setVisible(true);
         
 	    add(button1);
         setLayout(null);
@@ -111,12 +113,7 @@ public class IAT455CourseProject extends JFrame {
         	}
         });
         
-        brushWidth.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                width = brushWidth.getValue();
-                height = brushWidth.getValue();
-            }
-        });
+        addMouseListener(this);
 	}// end constructor
 	
 	public BufferedImage combineImages(BufferedImage src1, BufferedImage src2) {
@@ -138,7 +135,7 @@ public class IAT455CourseProject extends JFrame {
 		int w = width / 2;
         int h = height / 2;
 		
-		this.setSize(w * 7 + 300, h * 5 + 100);
+		this.setSize(w * 6 + 80, h * 5 + 100);
 		
 		g.drawString("Select Image (click on small image for browsing UI)", 18, 50);
 		g.drawImage(select, 18, 61, w, h, this);
@@ -148,6 +145,35 @@ public class IAT455CourseProject extends JFrame {
 	
 	public static void main(String[] args) {
 		new IAT455CourseProject();
+	}
+
+	@Override
+	public void mouseClicked(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseEntered(MouseEvent e) {
+		
+	}
+
+	@Override
+	public void mouseExited(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mousePressed(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
+	}
+
+	@Override
+	public void mouseReleased(MouseEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
