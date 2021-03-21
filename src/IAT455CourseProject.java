@@ -131,7 +131,7 @@ public class IAT455CourseProject extends JFrame implements MouseListener {
 		g.drawString("Select Image (click on small image for browsing UI)", 18, 50);
 		g.drawImage(select, 18, 61, w, h, this);
 		g.drawImage(select, 200, 61, w*5, h*5, this);
-		System.out.println(diameter);
+		System.out.println(pressed);
 		repaint();
 	}
 	
@@ -159,7 +159,10 @@ public class IAT455CourseProject extends JFrame implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		if (e.getX() >= 200 && e.getX() <= 200 + width/2*5 && e.getY() >= 61 && e.getY() >= 61 + height/2*5) {
+		if (e.getX() >= 200 
+				&& e.getX() <= 200 + width/2*5 
+				&& e.getY() >= 61 
+				&& e.getY() <= 61 + height/2*5) {
 			pressed = true;
 		}
 	}
