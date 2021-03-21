@@ -16,6 +16,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -57,36 +58,24 @@ public class IAT455CourseProject extends JFrame implements MouseListener {
 		button1 = new JButton();
 	    button1.setBounds(10, 30, width/2, height/2);
 	    
-	    JSlider slider=new JSlider();
-
-		//spacing between major tick
+		JSlider slider=new JSlider(0,10);
 		slider.setMajorTickSpacing(10);
-	
-		//spacing between minor tick
 		slider.setMinorTickSpacing(1);
-
-		//make slider integer value visible
 		slider.setPaintLabels(true);
-	
-		//make slider tick visible
-		slider.setPaintTicks(true);
-	
-		//Create a JFrame with title ( Put slider into JFrame )
 		JFrame frame=new JFrame("Slider frame");
-		  
-		//set layout manager for JFrame
+		JLabel label1 = new JLabel("Brush Width");
 		frame.setLayout(new FlowLayout());
-	
 		//Add JSlider into JFrame
+		frame.add(label1);
 		frame.add(slider);	
-		//Set default close operation for JFrame
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		//Set JFrame size
-		frame.setSize(400,100);
+	  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-		//Make JFrame visible. So we can see it.
-		frame.setVisible(true);
+	  //Set JFrame size
+	  frame.setSize(400,100);
+
+	  //Make JFrame visible. So we can see it.
+	  frame.setVisible(true);
         
 	    add(button1);
         setLayout(null);
@@ -112,8 +101,6 @@ public class IAT455CourseProject extends JFrame implements MouseListener {
         		}
         	}
         });
-        
-        addMouseListener(this);
 	}// end constructor
 	
 	public BufferedImage combineImages(BufferedImage src1, BufferedImage src2) {
