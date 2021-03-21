@@ -2,6 +2,7 @@ import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.Graphics;
+import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -9,9 +10,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.geom.Ellipse2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -28,8 +31,9 @@ public class IAT455CourseProject extends JFrame {
 	static int width, height, mouseX, mouseY; 
 	public static JButton button1;
 	static BufferedImage select, placeholderImage;
-	boolean pressed;
+	boolean pressed, browsePressed;
 	public JSlider slider;
+	ArrayList<Ellipse2D.Double> brushTrail = new ArrayList<Ellipse2D.Double>(); 
 	
 	public IAT455CourseProject() {
 		// constructor
@@ -86,11 +90,12 @@ public class IAT455CourseProject extends JFrame {
         
         button1.addActionListener(new ActionListener() {
         	public void actionPerformed(ActionEvent e) {
+        		browsePressed = true;
         		JFileChooser fc = new JFileChooser();
         		fc.setDialogTitle("Please choose an image...");
         		FileNameExtensionFilter filter = new FileNameExtensionFilter("jpg", "png", "bmp", "gif");
         		fc.addChoosableFileFilter(filter);
-
+        		
         		// You should use the parent component instead of null
         		// but it was impossible to tell from the code snippet what that was.
         		if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
@@ -133,19 +138,29 @@ public class IAT455CourseProject extends JFrame {
 	public void paint(Graphics g) {
 		int w = width / 2;
         int h = height / 2;
-		int diameter = (int)slider.getValue();
+       	int diameter = (int)slider.getValue();
+       	Graphics2D g2 = (Graphics2D) g;
         
 		this.setSize(w * 12 + 80, h * 6 + 100);
 		
 		g.drawString("Select Image (click on small image for browsing UI)", 18, 50);
 		g.drawImage(select, 18, 61, w, h, this);
 		g.drawImage(select, 200, 61, w*5, h*5, this);
-		if(pressed == true) {
-			g.fillOval((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - diameter/2,
+		
+		if(pressed == true
+				&& (int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() >= 200 + diameter/2
+				&& (int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() <= 200 + w*5 - diameter/2
+				&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() >= 61 + diameter/2
+				&& (int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() <= 61 + h*5 - diameter/2) {
+			brushTrail.add(new Ellipse2D.Double((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - diameter/2,
 				(int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - diameter/2,
-				diameter*2, diameter*2);		
+				diameter*2, diameter*2));	
 		}
-		System.out.println(diameter);
+		
+		for (int a = 0; a < brushTrail.size(); a++) {
+			g2.fill(brushTrail.get(a));
+		}
+		System.out.println("yup");
 		repaint();
 	}
 	private int clip(int v)
