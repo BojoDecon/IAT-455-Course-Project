@@ -117,7 +117,13 @@ public class IAT455CourseProject extends JFrame {
                 int rgb1 = src1.getRGB(i,j);
                 int rgb2 = src2.getRGB(i,j);
                 int newR = 0,newG = 0,newB = 0;
-
+                
+                newR = (getRed(rgb1) * (getRed(rgb2)))/255;
+                newG = (getGreen(rgb1) * (getGreen(rgb2)))/255;
+                newB = (getBlue(rgb1) * (getBlue(rgb2)))/255;
+                newR = clip(newR);
+                newG = clip(newG);
+                newB = clip(newB);
                 result.setRGB(i,j, new Color (newR,newG,newB).getRGB());
             }
         }
@@ -129,7 +135,7 @@ public class IAT455CourseProject extends JFrame {
         int h = height / 2;
 		int diameter = (int)slider.getValue();
         
-		this.setSize(w * 6 + 80, h * 5 + 100);
+		this.setSize(w * 12 + 80, h * 6 + 100);
 		
 		g.drawString("Select Image (click on small image for browsing UI)", 18, 50);
 		g.drawImage(select, 18, 61, w, h, this);
@@ -142,6 +148,24 @@ public class IAT455CourseProject extends JFrame {
 		System.out.println(diameter);
 		repaint();
 	}
+	private int clip(int v)
+    {
+        v = v > 255 ? 255 : v;
+        v = v < 0 ? 0 : v;
+        return v;
+    }
+
+    protected int getRed(int pixel) {
+        return (new Color(pixel)).getRed();
+    }
+
+    protected int getGreen(int pixel) {
+        return (new Color(pixel)).getGreen();
+    }
+
+    protected int getBlue(int pixel) {
+        return (new Color(pixel)).getBlue();
+    }
 	
 	public static void main(String[] args) {
 		IAT455CourseProject img = new IAT455CourseProject();
