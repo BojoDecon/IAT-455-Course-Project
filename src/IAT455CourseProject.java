@@ -28,12 +28,12 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class IAT455CourseProject extends JFrame {
 
-	static int width, height, mouseX, mouseY; 
+	static int width, height, mouseX, mouseY, timer; 
 	public static JButton button1;
-	static BufferedImage select, placeholderImage;
+	static BufferedImage select, placeholderImage, before;
 	boolean pressed, browsePressed;
 	public JSlider slider;
-	ArrayList<Ellipse2D.Double> brushTrail = new ArrayList<Ellipse2D.Double>(); 
+	ArrayList<Ellipse2D.Double> brushTrail = new ArrayList<Ellipse2D.Double>();
 	
 	public IAT455CourseProject() {
 		// constructor
@@ -46,11 +46,15 @@ public class IAT455CourseProject extends JFrame {
         } catch (Exception e) {
             System.out.println("Cannot load the provided image");
         }
+        
+        before = select;
+        
         this.setTitle("IAT 455 Course Project");
         setVisible(true);
         
         width = placeholderImage.getWidth();
         height = placeholderImage.getHeight();
+        timer = 100;
         
 		this.addWindowListener(
 			new WindowAdapter(){//anonymous class definition
@@ -60,7 +64,7 @@ public class IAT455CourseProject extends JFrame {
 			}//end WindowAdapter
 		);//end addWindowListener
 		
-		button1 = new JButton();
+		button1 = new JButton("browse");
 	    button1.setBounds(10, 30, width/2, height/2);
 	    
 		slider = new JSlider(JSlider.HORIZONTAL, 0, 10, 5);
@@ -99,9 +103,11 @@ public class IAT455CourseProject extends JFrame {
         		// You should use the parent component instead of null
         		// but it was impossible to tell from the code snippet what that was.
         		if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        			repaint();
         		    File selectedFile = fc.getSelectedFile();
         		    try {
         		        select = ImageIO.read(selectedFile);
+        		        before = ImageIO.read(selectedFile);
         		    } catch (IOException ex) {
         		        ex.printStackTrace();
         		    }
@@ -136,35 +142,53 @@ public class IAT455CourseProject extends JFrame {
         return result;
     }
 	
+	public BufferedImage drawOnImage(BufferedImage src) {
+		BufferedImage result = new BufferedImage(src.getWidth(),src.getHeight(),src.getType());
+
+        int g = getGreen(src.getRGB((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - 200, 
+        		(int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - 61));
+        int b = getBlue(src.getRGB((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - 200, 
+        		(int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - 61));
+        int newR = clip(getRed(src.getRGB((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - 200, 
+        		(int) MouseInfo.getPointerInfo().getLocation().getY() - this.getY() - 61)) + 10);
+        result.setRGB((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - 200, 
+        		(int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - 61, 
+        		new Color(newR, g, b).getRGB());
+
+	    return result;
+	        
+	}
+	
 	public void paint(Graphics g) {
 		int w = width / 2;
         int h = height / 2;
-       	int diameter = (int)slider.getValue();
-       	Graphics2D g2 = (Graphics2D) g;
-        
+       	
 		this.setSize(w * 12 + 80, h * 5 + 90);
 		
 		g.drawString("Select Image (click on small image for browsing UI)", 18, 50);
 		g.drawImage(select, 18, 61, w, h, this);
-		g.drawImage(select, 200, 61, w*5, h*5, this);
+		g.drawImage(before, 200, 61, w*5, h*5, this);
 		
-		if(pressed == true
-				&& (int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() >= 200 + diameter/2
-				&& (int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() <= 200 + w*5 - diameter*2
-				&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() >= 61 + diameter/2
-				&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() <= 61 + h*5 - diameter*2) {
-			brushTrail.add(new Ellipse2D.Double((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - diameter/2,
-				(int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - diameter/2,
-				diameter*2, diameter*2));	
-		}
-		
-		for (int a = 0; a < brushTrail.size(); a++) {
-			g2.fill(brushTrail.get(a));
-		}
-		repaint();
+		 if ((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() >= 200 
+	        		&& (int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() <= 200 + w*5
+	        		&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() >= 61
+	        		&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() <= 61 + h*5) {
+			 g.drawRect((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - slider.getValue()/2, 
+					 (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - slider.getValue()/2, 
+					 slider.getValue(), slider.getValue()); 
+			 timer--;
+			 System.out.println(timer);
+		 }
+		 
+		 repaint(0,0,1,1);
+		 
+		 if (timer < 0) {
+			 repaint(200, 61, w*5, h*5);
+			 timer = 100;
+		 }
 	}
-	private int clip(int v)
-    {
+	
+	private int clip(int v) {
         v = v > 255 ? 255 : v;
         v = v < 0 ? 0 : v;
         return v;
