@@ -24,11 +24,11 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 public class IAT455CourseProject extends JFrame implements MouseListener {
 
-	static int width; // width of the image
-	int height; // height of the image
+	static int width, height; 
 	public static JButton button1;
-	private JSlider brushWidth;
 	static BufferedImage select, placeholderImage;
+	boolean pressed;
+	public JSlider slider;
 	
 	public IAT455CourseProject() {
 		// constructor
@@ -47,6 +47,8 @@ public class IAT455CourseProject extends JFrame implements MouseListener {
         width = placeholderImage.getWidth();
         height = placeholderImage.getHeight();
         
+        pressed = false;
+        
 		this.addWindowListener(
 			new WindowAdapter(){//anonymous class definition
 				public void windowClosing(WindowEvent e){
@@ -58,24 +60,25 @@ public class IAT455CourseProject extends JFrame implements MouseListener {
 		button1 = new JButton();
 	    button1.setBounds(10, 30, width/2, height/2);
 	    
-		JSlider slider=new JSlider(0,10);
+		slider = new JSlider(JSlider.HORIZONTAL, 0, 10, 5);
 		slider.setMajorTickSpacing(10);
 		slider.setMinorTickSpacing(1);
 		slider.setPaintLabels(true);
-		JFrame frame=new JFrame("Slider frame");
+		JFrame frame = new JFrame("Slider frame");
 		JLabel label1 = new JLabel("Brush Width");
 		frame.setLayout(new FlowLayout());
+		
 		//Add JSlider into JFrame
 		frame.add(label1);
 		frame.add(slider);	
 
-	  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
-	  //Set JFrame size
-	  frame.setSize(400,100);
-
-	  //Make JFrame visible. So we can see it.
-	  frame.setVisible(true);
+		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	
+		//Set JFrame size
+		frame.setSize(400,100);
+	
+		//Make JFrame visible. So we can see it.
+		frame.setVisible(true);
         
 	    add(button1);
         setLayout(null);
@@ -121,17 +124,20 @@ public class IAT455CourseProject extends JFrame implements MouseListener {
 	public void paint(Graphics g) {
 		int w = width / 2;
         int h = height / 2;
-		
+		int diameter = (int)slider.getValue();
+        
 		this.setSize(w * 6 + 80, h * 5 + 100);
 		
 		g.drawString("Select Image (click on small image for browsing UI)", 18, 50);
 		g.drawImage(select, 18, 61, w, h, this);
 		g.drawImage(select, 200, 61, w*5, h*5, this);
+		System.out.println(diameter);
 		repaint();
 	}
 	
 	public static void main(String[] args) {
-		new IAT455CourseProject();
+		IAT455CourseProject img = new IAT455CourseProject();
+		img.repaint();
 	}
 
 	@Override
@@ -153,14 +159,15 @@ public class IAT455CourseProject extends JFrame implements MouseListener {
 
 	@Override
 	public void mousePressed(MouseEvent e) {
-		// TODO Auto-generated method stub
-		
+		if (e.getX() >= 200 && e.getX() <= 200 + width/2*5 && e.getY() >= 61 && e.getY() >= 61 + height/2*5) {
+			pressed = true;
+		}
 	}
 
 	@Override
 	public void mouseReleased(MouseEvent e) {
 		// TODO Auto-generated method stub
-		
+		pressed = false;
 	}
 
 }
