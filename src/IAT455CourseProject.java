@@ -142,7 +142,7 @@ public class IAT455CourseProject extends JFrame {
        	int diameter = (int)slider.getValue();
        	Graphics2D g2 = (Graphics2D) g;
         
-		this.setSize(w * 12 + 80, h * 6 + 100);
+		this.setSize(w * 12 + 80, h * 5 + 90);
 		
 		g.drawString("Select Image (click on small image for browsing UI)", 18, 50);
 		g.drawImage(select, 18, 61, w, h, this);
