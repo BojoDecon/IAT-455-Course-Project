@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JButton;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JSlider;
 import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
@@ -55,29 +56,17 @@ public class IAT455CourseProject extends JFrame {
 		button1 = new JButton();
 	    button1.setBounds(10, 30, width/2, height/2);
 	    
-	    JSlider slider=new JSlider();
+		JSlider slider=new JSlider(0,10);
+		slider.setMajorTickSpacing(10);
+		slider.setMinorTickSpacing(1);
+		slider.setPaintLabels(true);
+		JFrame frame=new JFrame("Slider frame");
+		JLabel label1 = new JLabel("Brush Width");
+		frame.setLayout(new FlowLayout());
+		//Add JSlider into JFrame
+		frame.add(label1);
+		frame.add(slider);	
 
-	  //spacing between major tick
-	  slider.setMajorTickSpacing(10);
-
-	  //spacing between minor tick
-	  slider.setMinorTickSpacing(1);
-
-	  //make slider integer value visible
-	  slider.setPaintLabels(true);
-
-	  //make slider tick visible
-	  slider.setPaintTicks(true);
-
-	  //Create a JFrame with title ( Put slider into JFrame )
-	  JFrame frame=new JFrame("Slider frame");
-	  
-	  //set layout manager for JFrame
-	  frame.setLayout(new FlowLayout());
-
-	  //Add JSlider into JFrame
-	  frame.add(slider);	
-	//Set default close operation for JFrame
 	  frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 	  //Set JFrame size
@@ -109,13 +98,6 @@ public class IAT455CourseProject extends JFrame {
         		    }
         		}
         	}
-        });
-        
-        brushWidth.addChangeListener(new ChangeListener() {
-            public void stateChanged(ChangeEvent e) {
-                width = brushWidth.getValue();
-                height = brushWidth.getValue();
-            }
         });
 	}// end constructor
 	
