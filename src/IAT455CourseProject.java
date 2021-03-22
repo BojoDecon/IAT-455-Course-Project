@@ -11,6 +11,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.awt.geom.Ellipse2D;
+import java.awt.geom.Ellipse2D.Double;
+import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -142,27 +144,12 @@ public class IAT455CourseProject extends JFrame {
         return result;
     }
 	
-	public BufferedImage drawOnImage(BufferedImage src) {
-		BufferedImage result = new BufferedImage(src.getWidth(),src.getHeight(),src.getType());
-
-        int g = getGreen(src.getRGB((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - 200, 
-        		(int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - 61));
-        int b = getBlue(src.getRGB((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - 200, 
-        		(int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - 61));
-        int newR = clip(getRed(src.getRGB((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - 200, 
-        		(int) MouseInfo.getPointerInfo().getLocation().getY() - this.getY() - 61)) + 10);
-        result.setRGB((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - 200, 
-        		(int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - 61, 
-        		new Color(newR, g, b).getRGB());
-
-	    return result;
-	        
-	}
-	
 	public void paint(Graphics g) {
 		int w = width / 2;
         int h = height / 2;
        	
+        Graphics2D g2 = (Graphics2D)g;
+        
 		this.setSize(w * 12 + 80, h * 5 + 90);
 		
 		g.drawString("Select Image (click on small image for browsing UI)", 18, 50);
@@ -173,19 +160,34 @@ public class IAT455CourseProject extends JFrame {
 	        		&& (int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() <= 200 + w*5
 	        		&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() >= 61
 	        		&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() <= 61 + h*5) {
-			 g.drawRect((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - slider.getValue()/2, 
+			 g.drawOval((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - slider.getValue()/2, 
 					 (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - slider.getValue()/2, 
 					 slider.getValue(), slider.getValue()); 
 			 timer--;
 			 System.out.println(timer);
 		 }
 		 
+		 if ((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() >= 200 
+	        		&& (int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() <= 200 + w*5
+	        		&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() >= 61
+	        		&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() <= 61 + h*5
+	        		&& pressed == true) {
+			 brushTrail.add(new Ellipse2D.Double((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - slider.getValue()/2, 
+					 (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - slider.getValue()/2, 
+					 slider.getValue(), slider.getValue()));
+		 }
+		 
+		 for (int a = 0; a < brushTrail.size(); a++) {
+			 g2.fill(brushTrail.get(a));
+		 }
+		 
 		 repaint(0,0,1,1);
 		 
-		 if (timer < 0) {
+		 if (timer < 0 && pressed == true) {
 			 repaint(200, 61, w*5, h*5);
 			 timer = 100;
 		 }
+		 
 	}
 	
 	private int clip(int v) {
