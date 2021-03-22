@@ -1,3 +1,4 @@
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.FlowLayout;
 import java.awt.Frame;
@@ -6,6 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.MouseInfo;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.WindowAdapter;
@@ -65,9 +68,6 @@ public class IAT455CourseProject extends JFrame {
 				}//end windowClosing()
 			}//end WindowAdapter
 		);//end addWindowListener
-		
-		button1 = new JButton("browse");
-	    button1.setBounds(10, 30, width/2, height/2);
 	    
 		slider = new JSlider(JSlider.HORIZONTAL, 0, 10, 5);
 		slider.setMajorTickSpacing(10);
@@ -89,6 +89,9 @@ public class IAT455CourseProject extends JFrame {
 		//Make JFrame visible. So we can see it.
 		frame.setVisible(true);
         
+		button1 = new JButton("browse");
+	    button1.setBounds(10, 30, width/2, height/2);
+		
 	    add(button1);
         setLayout(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -116,6 +119,8 @@ public class IAT455CourseProject extends JFrame {
         		}
         	}
         });
+        
+        addKeyListener(new MKeyListener());
         
         //create class and listener
         myMouseListener mml = new myMouseListener();
@@ -152,7 +157,8 @@ public class IAT455CourseProject extends JFrame {
         
 		this.setSize(w * 12 + 80, h * 5 + 90);
 		
-		g.drawString("Select Image (click on small image for browsing UI)", 18, 50);
+		g.drawString("1. Select Image (click on small image for browsing UI)", 18, 50);
+		g.drawString("2. Outline with left mouse button, backspace to undo", 400, 50);
 		g.drawImage(select, 18, 61, w, h, this);
 		g.drawImage(before, 200, 61, w*5, h*5, this);
 		
@@ -164,7 +170,6 @@ public class IAT455CourseProject extends JFrame {
 					 (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - slider.getValue(), 
 					 slider.getValue()*2, slider.getValue()*2); 
 			 timer--;
-			 System.out.println(timer);
 		 }
 		 
 		 if ((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() >= 200 
@@ -179,6 +184,14 @@ public class IAT455CourseProject extends JFrame {
 		 
 		 for (int a = 0; a < brushTrail.size(); a++) {
 			 g2.fill(brushTrail.get(a));
+		 }
+		 
+		 for (int a = 1; a < brushTrail.size(); a++) {
+			 g2.setStroke(new BasicStroke((int)brushTrail.get(a).getWidth()));
+			 g2.drawLine((int)brushTrail.get(a).getX() + (int)brushTrail.get(a).getWidth()/2,
+					 (int)brushTrail.get(a).getY() + (int)brushTrail.get(a).getHeight()/2,
+					 (int)brushTrail.get(a-1).getX() + (int)brushTrail.get(a).getWidth()/2,
+					 (int)brushTrail.get(a-1).getY() + (int)brushTrail.get(a).getHeight()/2);
 		 }
 		 
 		 repaint(0,0,1,1);
@@ -239,5 +252,21 @@ public class IAT455CourseProject extends JFrame {
 	    public void mouseReleased(MouseEvent arg0) { 
 	    	pressed = false;
 	    }
+	}
+	
+	class MKeyListener extends KeyAdapter {
+		 
+	    @Override
+	    public void keyPressed(KeyEvent event) {
+	 
+		    char ch = event.getKeyChar();
+		 
+		    if (ch == KeyEvent.VK_BACK_SPACE ) {
+		    	
+		    	for(int a = 1; a < 20; a++) {
+		    		brushTrail.remove(brushTrail.size()-a);
+		    	}
+		    }
+	    }	 
 	}
 }
