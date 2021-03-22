@@ -89,9 +89,13 @@ public class IAT455CourseProject extends JFrame {
 		//Make JFrame visible. So we can see it.
 		frame.setVisible(true);
         
+		//Add KeyListener for backspace functionality
+		addKeyListener(new MKeyListener());
+		
 		button1 = new JButton("browse");
 	    button1.setBounds(10, 30, width/2, height/2);
-		
+	    button1.setFocusable(false);
+	    
 	    add(button1);
         setLayout(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -108,6 +112,7 @@ public class IAT455CourseProject extends JFrame {
         		// You should use the parent component instead of null
         		// but it was impossible to tell from the code snippet what that was.
         		if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
+        			brushTrail.clear();
         			repaint();
         		    File selectedFile = fc.getSelectedFile();
         		    try {
@@ -119,8 +124,6 @@ public class IAT455CourseProject extends JFrame {
         		}
         	}
         });
-        
-        addKeyListener(new MKeyListener());
         
         //create class and listener
         myMouseListener mml = new myMouseListener();
@@ -266,6 +269,7 @@ public class IAT455CourseProject extends JFrame {
 		    	for(int a = 1; a < 20; a++) {
 		    		brushTrail.remove(brushTrail.size()-a);
 		    	}
+		    	System.out.println("yes");
 		    }
 	    }	 
 	}
