@@ -160,9 +160,9 @@ public class IAT455CourseProject extends JFrame {
 	        		&& (int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() <= 200 + w*5
 	        		&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() >= 61
 	        		&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() <= 61 + h*5) {
-			 g.drawOval((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - slider.getValue()/2, 
-					 (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - slider.getValue()/2, 
-					 slider.getValue(), slider.getValue()); 
+			 g.drawOval((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - slider.getValue(), 
+					 (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - slider.getValue(), 
+					 slider.getValue()*2, slider.getValue()*2); 
 			 timer--;
 			 System.out.println(timer);
 		 }
@@ -172,9 +172,9 @@ public class IAT455CourseProject extends JFrame {
 	        		&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() >= 61
 	        		&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() <= 61 + h*5
 	        		&& pressed == true) {
-			 brushTrail.add(new Ellipse2D.Double((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - slider.getValue()/2, 
-					 (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - slider.getValue()/2, 
-					 slider.getValue(), slider.getValue()));
+			 brushTrail.add(new Ellipse2D.Double((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - slider.getValue(), 
+					 (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - slider.getValue(), 
+					 slider.getValue()*2, slider.getValue()*2));
 		 }
 		 
 		 for (int a = 0; a < brushTrail.size(); a++) {
@@ -183,7 +183,7 @@ public class IAT455CourseProject extends JFrame {
 		 
 		 repaint(0,0,1,1);
 		 
-		 if (timer < 0 && pressed == true) {
+		 if (timer < 0) {
 			 repaint(200, 61, w*5, h*5);
 			 timer = 100;
 		 }
