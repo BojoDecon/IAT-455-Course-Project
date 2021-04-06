@@ -34,7 +34,6 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
-import javafx.scene.shape.Polyline;
 
 public class IAT455CourseProject extends JFrame {
 
