@@ -17,6 +17,9 @@ import java.awt.geom.Ellipse2D;
 import java.awt.geom.Ellipse2D.Double;
 import java.awt.geom.Rectangle2D;
 import java.awt.image.BufferedImage;
+import java.awt.image.BufferedImageOp;
+import java.awt.image.ConvolveOp;
+import java.awt.image.Kernel;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -152,6 +155,20 @@ public class IAT455CourseProject extends JFrame {
 				result.setRGB(i, j, new Color(newR, newG, newB).getRGB());
 			}
 		}
+		return result;
+	}
+	
+	public BufferedImage applyBlur(BufferedImage src){
+		//by using the matrix of 3x3 with the gaussian kernel matrix, a blur will be applied to the passed BufferedImg
+		BufferedImage result = new BufferedImage(src.getWidth(), src.getHeight(), src.getType());
+		float[] matrix = {
+				1/16f, 1/8f, 1/16f,
+				1/8f, 1/4f, 1/8f,
+				1/16f, 1/8f, 1/16f,
+		};
+		BufferedImageOp op = new ConvolveOp(new Kernel(3, 3, matrix));
+		result = op.filter(src,result);
+
 		return result;
 	}
 	
