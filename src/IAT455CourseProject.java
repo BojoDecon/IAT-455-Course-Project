@@ -38,7 +38,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 public class IAT455CourseProject extends JFrame {
 
 	static int width, height, mouseX, mouseY, timer;
-	public static JButton button1;
+	public static JButton button1, button2;
 	static BufferedImage select, placeholderImage, before;
 	boolean pressed, browsePressed;
 	public JSlider slider;
@@ -96,10 +96,10 @@ public class IAT455CourseProject extends JFrame {
 		// Add KeyListener for backspace functionality
 		addKeyListener(new MKeyListener());
 
-		button1 = new JButton("browse");
+		button1 = new JButton();
 		button1.setBounds(10, 30, width / 2, height / 2);
 		button1.setFocusable(false);
-
+		
 		add(button1);
 		setLayout(null);
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -172,9 +172,9 @@ public class IAT455CourseProject extends JFrame {
 	}
 	
 	public void test() {
-		
-		
-		
+		for (int a = 0; a < brushTrailY.size(); a ++) {
+			
+		}
 	}
 
 	public void paint(Graphics g) {
@@ -232,7 +232,7 @@ public class IAT455CourseProject extends JFrame {
 
 		if (timer < 0) {
 			repaint(200, 61, w*5, h*5);
-			timer = 100;
+			timer = 50;
 		}
 
 	}
@@ -301,6 +301,11 @@ public class IAT455CourseProject extends JFrame {
 					brushTrailX.clear();
 					brushTrailY.clear();
 				}
+			}
+			
+			if (ch == KeyEvent.VK_ENTER) {
+				System.out.println("yup");
+				repaint();
 			}
 		}
 	}
