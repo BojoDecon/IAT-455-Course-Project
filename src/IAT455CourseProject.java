@@ -23,6 +23,7 @@ import java.awt.image.Kernel;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 
 import javax.imageio.ImageIO;
 import javax.swing.JButton;
@@ -39,11 +40,11 @@ public class IAT455CourseProject extends JFrame {
 
 	static int width, height, mouseX, mouseY, timer;
 	public static JButton button1, button2;
-	static BufferedImage select, placeholderImage, before;
+	static BufferedImage select, placeholderImage, before, after;
 	boolean pressed, browsePressed;
 	public JSlider slider;
-	ArrayList<Integer> brushTrailX = new ArrayList<Integer>();
-	ArrayList<Integer> brushTrailY = new ArrayList<Integer>();
+	static ArrayList<Integer> brushTrailX = new ArrayList<Integer>();
+	static ArrayList<Integer> brushTrailY = new ArrayList<Integer>();
 
 	public IAT455CourseProject() {
 		// constructor
@@ -60,7 +61,7 @@ public class IAT455CourseProject extends JFrame {
 		
 
 		before = select;
-		
+		after = select;
 
 
 		this.setTitle("IAT 455 Course Project");
@@ -127,7 +128,7 @@ public class IAT455CourseProject extends JFrame {
 					try {
 						select = ImageIO.read(selectedFile);
 						before = ImageIO.read(selectedFile);
-						before = dropShadow(select,10);
+						after = ImageIO.read(selectedFile);
 					} catch (IOException ex) {
 						ex.printStackTrace();
 					}
@@ -143,8 +144,8 @@ public class IAT455CourseProject extends JFrame {
 	public BufferedImage multiplyImages(BufferedImage src1, BufferedImage src2) {
 		BufferedImage result = new BufferedImage(src1.getWidth(), src1.getHeight(), src1.getType());
 
-		for (int i = 0; i < result.getWidth(); i++) {
-			for (int j = 0; j < result.getHeight(); j++) {
+		for (int i = 0; i < result.getHeight(); i++) {
+			for (int j = 0; j < result.getWidth(); j++) {
 				int rgb1 = src1.getRGB(i, j);
 				int rgb2 = src2.getRGB(i, j);
 				int newR = 0, newG = 0, newB = 0;
@@ -174,9 +175,26 @@ public class IAT455CourseProject extends JFrame {
 		//construct a blur filter using the ConvolveOp and Kernel
 		//assigning them to a BufferedImageOp object allows us to return it as a BufferedImage using the filter method
 		BufferedImageOp op = new ConvolveOp(new Kernel(3, 3, matrix));
-		//performing the filter from the source image (parameters) to the  resulting image using the filter method from BufferedImageOp
-		result = op.filter(src,result);
-
+		
+		result = op.filter(src, result);
+		
+		for (int a = Collections.min(brushTrailY); a < Collections.max(brushTrailY); a++) {
+			int xMin, xMax;
+			ArrayList<Integer> x = new ArrayList<Integer>();
+			for (int b = 0; b < brushTrailY.size(); b++) {
+				if (brushTrailY.get(b) == a) {
+					x.add(brushTrailX.get(b));
+				}
+			}
+			if(!x.isEmpty()) {
+				xMin = Collections.min(x);
+				xMax = Collections.max(x);
+				for (int c = xMin-2; c < xMax; c++) {
+					result.setRGB((int)((c-200)*src.getWidth()/((width/2)*5)), (int)((a-61)*src.getHeight()/((height/2)*5)), src.getRGB((int)((c-200)*src.getWidth()/((width/2)*5)), (int)((a-61)*src.getHeight()/((height/2)*5))));
+				}
+			}
+		}
+		
 		return result;
 	}
 	
@@ -231,13 +249,15 @@ public class IAT455CourseProject extends JFrame {
 		this.setSize(w * 12 + 80, h * 5 + 90);
 
 		g.drawString("1. Select Image (click on small image for browsing UI)", 18, 50);
-		g.drawString("2. Outline with left mouse button, backspace to undo", 400, 50);
+		g.drawString("2. Outline with left mouse button, backspace to clear", 400, 50);
+		g.drawString("3. Enter to create new composite", 1000, 50);
 		g.drawImage(select, 18, 61, w, h, this);
 		g.drawImage(before, 200, 61, w*5, h*5, this);
+		g.drawImage(after, 1000, 61, w*5, h*5, this);
 
-		if ((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() >= 200 
+		if ((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() >= 200 + slider.getValue()*2
 				&& (int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() <= 200 + w*5
-				&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() >= 61
+				&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() >= 61 + slider.getValue()*2
 				&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() <= 61 + h*5) {
 			g.drawOval((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - slider.getValue()*2, 
 					(int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - slider.getValue()*2, 
@@ -245,9 +265,9 @@ public class IAT455CourseProject extends JFrame {
 			timer--;
 		}
 
-		if ((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() >= 200 
+		if ((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() >= 200 + slider.getValue()*2
 				&& (int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() <= 200 + w*5
-				&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() >= 61
+				&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() >= 61 + slider.getValue()*2
 				&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() <= 61 + h*5
 				&& pressed == true) {
 			brushTrailX.add(Integer.valueOf((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - slider.getValue()));
@@ -349,7 +369,7 @@ public class IAT455CourseProject extends JFrame {
 			}
 			
 			if (ch == KeyEvent.VK_ENTER) {
-				System.out.println("yup");
+				after = applyBlur(after);
 				repaint();
 			}
 		}
