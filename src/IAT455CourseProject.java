@@ -182,9 +182,7 @@ public class IAT455CourseProject extends JFrame {
 		// 3. Blur the image (shadow)	
 		// 4. Paint/draw over the original. 
 
-		BufferedImage result = new BufferedImage(src.getWidth()
-				+ shadowWidth, src.getHeight() + shadowWidth,
-				BufferedImage.TYPE_INT_ARGB);
+		BufferedImage result = new BufferedImage(src.getWidth() + shadowWidth, src.getHeight() + shadowWidth, BufferedImage.TYPE_INT_ARGB);
 
 		Graphics2D g = result.createGraphics();
 		g.drawImage(src, shadowWidth >> 1, shadowWidth >> 1, null);
@@ -203,12 +201,7 @@ public class IAT455CourseProject extends JFrame {
 		g.dispose();
 
 		//blurring the opaque gray and the surrounding.
-		
 		result = applyBlur(result);
-		/*result = getGaussianBlurFilter((int) (shadowWidth * 1.2), true)
-				.filter(result, null);
-		result = getGaussianBlurFilter((int) (shadowWidth * 1.2), false)
-				.filter(result, null);*/
 		g = result.createGraphics();
 		g.drawImage(src, 0, 0, null);
 
