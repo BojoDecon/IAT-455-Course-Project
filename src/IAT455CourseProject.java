@@ -60,6 +60,8 @@ public class IAT455CourseProject extends JFrame {
 		
 
 		before = select;
+		
+
 
 		this.setTitle("IAT 455 Course Project");
 		setVisible(true);
@@ -125,6 +127,7 @@ public class IAT455CourseProject extends JFrame {
 					try {
 						select = ImageIO.read(selectedFile);
 						before = ImageIO.read(selectedFile);
+						before = dropShadow(select,10);
 					} catch (IOException ex) {
 						ex.printStackTrace();
 					}
@@ -168,44 +171,48 @@ public class IAT455CourseProject extends JFrame {
 				1/8f, 1/4f, 1/8f,
 				1/16f, 1/8f, 1/16f,
 		};
+		//construct a blur filter using the ConvolveOp and Kernel
+		//assigning them to a BufferedImageOp object allows us to return it as a BufferedImage using the filter method
 		BufferedImageOp op = new ConvolveOp(new Kernel(3, 3, matrix));
+		//performing the filter from the source image (parameters) to the  resulting image using the filter method from BufferedImageOp
 		result = op.filter(src,result);
 
 		return result;
 	}
 	
 	//method to apply the drop shadow on an image
-	public static BufferedImage dropShadow(BufferedImage src, int shadowWidth) {
+	public static BufferedImage dropShadow(BufferedImage src, int sWidth) {
 
 		// 1. Move the current image to the bottom right
 		// 2. Gray the current image located at the bottom right
 		// 3. Blur the image (shadow)	
 		// 4. Paint/draw over the original. 
 
-		BufferedImage result = new BufferedImage(src.getWidth() + shadowWidth, src.getHeight() + shadowWidth, BufferedImage.TYPE_INT_ARGB);
+		//the resulting image will be the source image width and height + the shadow width and height which is specified from the users
+		BufferedImage result = new BufferedImage(src.getWidth() + sWidth, src.getHeight() + sWidth, BufferedImage.TYPE_INT_ARGB);
 
-		Graphics2D g = result.createGraphics();
-		g.drawImage(src, shadowWidth >> 1, shadowWidth >> 1, null);
+		Graphics2D g2 = result.createGraphics();
+		g2.drawImage(src, sWidth >> 1, sWidth >> 1, null);
 
 		//graying out the image while still keeping the alpha values
 		int[] pixels = new int[result.getWidth() * result.getHeight()];
 		result.getRGB(0, 0, result.getWidth(), result.getHeight(), pixels, 0 , result.getWidth());
 
 		for (int i = 0; i < pixels.length; i++) {
-			// This will keep only the alpha channel and some of the grey values
+			// This will keep only the alpha channel and the grey values
 			pixels[i] = (pixels[i] & (0xff000000)) | 0x00505050;
 		}
 		result.setRGB(0, 0, result.getWidth(), result.getHeight(), pixels,
 				0 , result.getWidth());
-		//dispose any irrelevant objects in the graphics var
-		g.dispose();
+		//dispose any irrelevant objects in the graphic variable
+		g2.dispose();
 
 		//blurring the opaque gray and the surrounding.
 		result = applyBlur(result);
-		g = result.createGraphics();
-		g.drawImage(src, 0, 0, null);
+		g2 = result.createGraphics();
+		g2.drawImage(src, 0, 0, null);
 
-		g.dispose();
+		g2.dispose();
 		return result;
 	}
 	
