@@ -56,6 +56,8 @@ public class IAT455CourseProject extends JFrame {
 		} catch (Exception e) {
 			System.out.println("Cannot load the provided image");
 		}
+		
+		
 
 		before = select;
 
@@ -157,8 +159,9 @@ public class IAT455CourseProject extends JFrame {
 		return result;
 	}
 	
-	public BufferedImage applyBlur(BufferedImage src){
-		//by using the matrix of 3x3 with the gaussian kernel matrix, a blur will be applied to the passed BufferedImg
+	//method to apply the blur on the shadow of an image. 
+	public static BufferedImage applyBlur(BufferedImage src){
+		//by using the matrix of 3x3 with the GaussianBlur kernel matrix, a blur will be applied to the passed BufferedImg
 		BufferedImage result = new BufferedImage(src.getWidth(), src.getHeight(), src.getType());
 		float[] matrix = {
 				1/16f, 1/8f, 1/16f,
@@ -168,6 +171,48 @@ public class IAT455CourseProject extends JFrame {
 		BufferedImageOp op = new ConvolveOp(new Kernel(3, 3, matrix));
 		result = op.filter(src,result);
 
+		return result;
+	}
+	
+	//method to apply the drop shadow on an image
+	public static BufferedImage dropShadow(BufferedImage src, int shadowWidth) {
+
+		// 1. Move the current image to the bottom right
+		// 2. Gray the current image located at the bottom right
+		// 3. Blur the image (shadow)	
+		// 4. Paint/draw over the original. 
+
+		BufferedImage result = new BufferedImage(src.getWidth()
+				+ shadowWidth, src.getHeight() + shadowWidth,
+				BufferedImage.TYPE_INT_ARGB);
+
+		Graphics2D g = result.createGraphics();
+		g.drawImage(src, shadowWidth >> 1, shadowWidth >> 1, null);
+
+		//graying out the image while still keeping the alpha values
+		int[] pixels = new int[result.getWidth() * result.getHeight()];
+		result.getRGB(0, 0, result.getWidth(), result.getHeight(), pixels, 0 , result.getWidth());
+
+		for (int i = 0; i < pixels.length; i++) {
+			// This will keep only the alpha channel and some of the grey values
+			pixels[i] = (pixels[i] & (0xff000000)) | 0x00505050;
+		}
+		result.setRGB(0, 0, result.getWidth(), result.getHeight(), pixels,
+				0 , result.getWidth());
+		//dispose any irrelevant objects in the graphics var
+		g.dispose();
+
+		//blurring the opaque gray and the surrounding.
+		
+		result = applyBlur(result);
+		/*result = getGaussianBlurFilter((int) (shadowWidth * 1.2), true)
+				.filter(result, null);
+		result = getGaussianBlurFilter((int) (shadowWidth * 1.2), false)
+				.filter(result, null);*/
+		g = result.createGraphics();
+		g.drawImage(src, 0, 0, null);
+
+		g.dispose();
 		return result;
 	}
 	
