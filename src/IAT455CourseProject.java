@@ -383,6 +383,7 @@ public class IAT455CourseProject extends JFrame {
 			}
 			
 			if (ch == KeyEvent.VK_ENTER) {
+				after = applyBlur(after);
 				after = dropShadow(after, 10);
 				repaint();
 			}
