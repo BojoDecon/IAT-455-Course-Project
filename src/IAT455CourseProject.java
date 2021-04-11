@@ -37,7 +37,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 
 
 public class IAT455CourseProject extends JFrame {
-
+	//fields
 	static int width, height, mouseX, mouseY, timer;
 	public static JButton button1, button2;
 	static BufferedImage select, placeholderImage, before, after;
@@ -58,26 +58,30 @@ public class IAT455CourseProject extends JFrame {
 			System.out.println("Cannot load the provided image");
 		}
 		
-		
-
+		// instantiate the main images 
 		before = select;
 		after = select;
 
 
+		// set up JFrame
 		this.setTitle("IAT 455 Course Project");
 		setVisible(true);
 
+		// variables needed for images in paint()
 		width = placeholderImage.getWidth();
 		height = placeholderImage.getHeight();
+		// refresh timer
 		timer = 100;
 
+		
 		this.addWindowListener(new WindowAdapter() {// anonymous class definition
 			public void windowClosing(WindowEvent e) {
 				System.exit(0);// terminate the program
 			}// end windowClosing()
 		}// end WindowAdapter
-				);// end addWindowListener
+		);// end addWindowListener
 
+		// slider menu for brush tool
 		slider = new JSlider(JSlider.HORIZONTAL, 0, 10, 5);
 		slider.setMajorTickSpacing(10);
 		slider.setMinorTickSpacing(1);
@@ -89,7 +93,6 @@ public class IAT455CourseProject extends JFrame {
 		// Add JSlider into JFrame
 		frame.add(label1);
 		frame.add(slider);
-
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 		// Set JFrame size
@@ -101,6 +104,7 @@ public class IAT455CourseProject extends JFrame {
 		// Add KeyListener for backspace functionality
 		addKeyListener(new MKeyListener());
 
+		// add buttons for image selection
 		button1 = new JButton();
 		button1.setBounds(10, 30, width / 2, height / 2);
 		button1.setFocusable(false);
@@ -118,13 +122,13 @@ public class IAT455CourseProject extends JFrame {
 				FileNameExtensionFilter filter = new FileNameExtensionFilter("jpg", "png", "bmp", "gif");
 				fc.addChoosableFileFilter(filter);
 
-				// You should use the parent component instead of null
-				// but it was impossible to tell from the code snippet what that was.
+				// Action on approval of image type
 				if (fc.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 					brushTrailX.clear();
 					brushTrailY.clear();
 					repaint();
 					File selectedFile = fc.getSelectedFile();
+					// sets images to the selected file
 					try {
 						select = ImageIO.read(selectedFile);
 						before = ImageIO.read(selectedFile);
@@ -141,27 +145,27 @@ public class IAT455CourseProject extends JFrame {
 		this.addMouseListener(mml);
 	}// end constructor
 
-	public BufferedImage multiplyImages(BufferedImage src1, BufferedImage src2) {
-		BufferedImage result = new BufferedImage(src1.getWidth(), src1.getHeight(), src1.getType());
-
-		for (int i = 0; i < result.getHeight(); i++) {
-			for (int j = 0; j < result.getWidth(); j++) {
-				int rgb1 = src1.getRGB(i, j);
-				int rgb2 = src2.getRGB(i, j);
-				int newR = 0, newG = 0, newB = 0;
-
-				newR = (getRed(rgb1) * (getRed(rgb2))) / 255;
-				newG = (getGreen(rgb1) * (getGreen(rgb2))) / 255;
-				newB = (getBlue(rgb1) * (getBlue(rgb2))) / 255;
-				newR = clip(newR);
-				newG = clip(newG);
-				newB = clip(newB);
-
-				result.setRGB(i, j, new Color(newR, newG, newB).getRGB());
-			}
-		}
-		return result;
-	}
+//	public BufferedImage multiplyImages(BufferedImage src1, BufferedImage src2) {
+//		BufferedImage result = new BufferedImage(src1.getWidth(), src1.getHeight(), src1.getType());
+//
+//		for (int i = 0; i < result.getHeight(); i++) {
+//			for (int j = 0; j < result.getWidth(); j++) {
+//				int rgb1 = src1.getRGB(i, j);
+//				int rgb2 = src2.getRGB(i, j);
+//				int newR = 0, newG = 0, newB = 0;
+//
+//				newR = (getRed(rgb1) * (getRed(rgb2))) / 255;
+//				newG = (getGreen(rgb1) * (getGreen(rgb2))) / 255;
+//				newB = (getBlue(rgb1) * (getBlue(rgb2))) / 255;
+//				newR = clip(newR);
+//				newG = clip(newG);
+//				newB = clip(newB);
+//
+//				result.setRGB(i, j, new Color(newR, newG, newB).getRGB());
+//			}
+//		}
+//		return result;
+//	}
 	
 	//method to apply the blur on the shadow of an image. 
 	public static BufferedImage applyBlur(BufferedImage src){
@@ -233,38 +237,42 @@ public class IAT455CourseProject extends JFrame {
 		g2.dispose();
 		return result;
 	}
-	
-	public void test() {
-		for (int a = 0; a < brushTrailY.size(); a ++) {
-			
-		}
-	}
 
+	// paint on JFrame
 	public void paint(Graphics g) {
 		int w = width / 2;
 		int h = height / 2;
 
 		Graphics2D g2 = (Graphics2D)g;
 
+		// set JFrame dimensions
 		this.setSize(w * 12 + 80, h * 5 + 90);
 
+		// instructions
 		g.drawString("1. Select Image (click on small image for browsing UI)", 18, 50);
 		g.drawString("2. Outline with left mouse button, backspace to clear", 400, 50);
 		g.drawString("3. Enter to create new composite", 1000, 50);
+		// UI components
 		g.drawImage(select, 18, 61, w, h, this);
+		g.setColor(new Color (255, 255, 255));
+		g.drawRect(200, 61, w*5, h*5);
 		g.drawImage(before, 200, 61, w*5, h*5, this);
 		g.drawImage(after, 1000, 61, w*5, h*5, this);
 
+		// brush cursor
 		if ((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() >= 200 + slider.getValue()*2
 				&& (int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() <= 200 + w*5
 				&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() >= 61 + slider.getValue()*2
 				&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() <= 61 + h*5) {
+			g.setColor(new Color (0));
 			g.drawOval((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() - slider.getValue()*2, 
 					(int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - slider.getValue()*2, 
 					slider.getValue()*2, slider.getValue()*2); 
 			timer--;
 		}
+		
 
+		// adds new point to add to polyline
 		if ((int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() >= 200 + slider.getValue()*2
 				&& (int) MouseInfo.getPointerInfo().getLocation().getX()-this.getX() <= 200 + w*5
 				&& (int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() >= 61 + slider.getValue()*2
@@ -274,9 +282,11 @@ public class IAT455CourseProject extends JFrame {
 			brushTrailY.add(Integer.valueOf((int) MouseInfo.getPointerInfo().getLocation().getY()-this.getY() - slider.getValue()));
 		}
 
+		// polyline variables for coordinates
 		int[] trailX = null;
 		int[] trailY = null;
 
+		// draws polyline with fill
 		if (brushTrailX != null) {
 			trailX = new int[brushTrailX.size()];
 			trailY = new int[brushTrailX.size()];
@@ -290,11 +300,11 @@ public class IAT455CourseProject extends JFrame {
 			g.setColor(new Color(255, 0, 0, 25));
 			g.fillPolygon(trailX, trailY, brushTrailX.size()); 
 		}
-		
-		test();
 
+		// ensures the code still refreshes and gives a baud rate
 		repaint(0,0,1,1);
 
+		// repaints the drawing UI at a lower baud rate for image loading purposes
 		if (timer < 0) {
 			repaint(200, 61, w*5, h*5);
 			timer = 50;
@@ -302,12 +312,13 @@ public class IAT455CourseProject extends JFrame {
 
 	}
 
-	private int clip(int v) {
-		v = v > 255 ? 255 : v;
-		v = v < 0 ? 0 : v;
-		return v;
-	}
+//	private int clip(int v) {
+//		v = v > 255 ? 255 : v;
+//		v = v < 0 ? 0 : v;
+//		return v;
+//	}
 
+	// helper classes 
 	protected int getRed(int pixel) {
 		return (new Color(pixel)).getRed();
 	}
@@ -320,11 +331,13 @@ public class IAT455CourseProject extends JFrame {
 		return (new Color(pixel)).getBlue();
 	}
 
+	// main class
 	public static void main(String[] args) {
 		IAT455CourseProject img = new IAT455CourseProject();
 		img.repaint();
 	}
 
+	// mouse listener for the brush UI
 	class myMouseListener implements MouseListener {
 
 		@Override
@@ -353,6 +366,7 @@ public class IAT455CourseProject extends JFrame {
 		}
 	}
 
+	// key listener for inputs to clear or process the drawn on image
 	class MKeyListener extends KeyAdapter {
 
 		@Override
@@ -369,7 +383,7 @@ public class IAT455CourseProject extends JFrame {
 			}
 			
 			if (ch == KeyEvent.VK_ENTER) {
-				after = applyBlur(after);
+				after = dropShadow(after, 10);
 				repaint();
 			}
 		}
